@@ -1,0 +1,15 @@
+
+POST http://localhost:5000/people HTTP/1.1
+Content-Type: application/json
+
+
+{
+    "name": "first",
+}
+
+###
+
+ http://localhost:5000/people
+
+
+###
