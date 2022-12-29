@@ -1,10 +1,17 @@
 const mongoose = require("mongoose");
 const PersonModal = require("../database/models/person");
+const { createPerson } = require("./utils")
 
-const createPerson = async (req, res) => {
-    const person = req.body;
-    const newPerson = new PersonModal(person); // using model to create new obj
+
+const createOrGetPerson = async (req, res) => {
     try {
+        const { name } = req.body;
+        const personExists = await PersonModal.findOne({ name }).exec(); // return null if dont exists
+        if (personExists) return res.status(201).json(personExists);
+
+        const getData = await createPerson(name);
+
+        const newPerson = new PersonModal(getData); // using model to create new obj
         await newPerson.save(); //tring to save asny new document in DB
 
         res.status(201).json(newPerson); //success creating new document
@@ -24,6 +31,6 @@ const getPeople = async (req, res) => {
 };
 
 module.exports = {
-    createPerson,
+    createOrGetPerson,
     getPeople
 }
