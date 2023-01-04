@@ -6,6 +6,7 @@ const { createPerson } = require("./utils")
 const createOrGetPerson = async (req, res) => {
     try {
         const { name } = req.body;
+        console.log("namee", req.body);
         const personExists = await PersonModal.findOne({ name }).exec(); // return null if dont exists
         if (personExists) return res.status(201).json(personExists);
 
@@ -30,7 +31,25 @@ const getPeople = async (req, res) => {
     }
 };
 
+const deletePerson = async (req, res) => {
+    try {
+        const { id } = req.body;
+        console.log("dataa", req.body);
+        const personExists = await PersonModal.findOneAndDelete({ _id: id }).exec(); // return null if dont exists
+        console.log("personExists", personExists);
+        if (!personExists) {
+            throw new Error("name don`t exists")
+        }
+
+
+        res.status(200).json({ message: ` ${personExists.name} deleted successfully` });
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
 module.exports = {
     createOrGetPerson,
-    getPeople
+    getPeople,
+    deletePerson
 }
